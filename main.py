@@ -6,6 +6,8 @@ import player_utils
 
 # main file that runs the game loop
 
+# comment to test git
+
 
 # number of players (not including dealer)
 player_count = 4
