@@ -44,19 +44,17 @@ def update_all_values(players):
 def print_all_cards(players):
     for player in players:
 
-        # special print for the dealer
+        # different prints for dealer, player, and ai
         if player.role == 'dealer':
             print(f'dealer: {player.print_cards()}??')
-        
-        # special print for player
         elif player.role == 'main':
             print(f'you: {player.print_cards()}[{player.value}]')
-
-        # print for ai players
         else:
             print(f'ai: {player.print_cards()}[{player.value}]')
 
+# function for hitting
 def hit(player, deck):
+
     # print the card they draw (the top card of the deck) before it is removed from the deck
     print(f'{deck.cards[len(deck.cards) - 1]}')
 
@@ -64,3 +62,23 @@ def hit(player, deck):
     player.draw(deck.deal(1))
     player.update_value()
     print(f'{player.print_cards()}[{player.value}]')
+
+# print who won, lost, or busted at the end
+# takes the list of players (dealer needs to be at the end)
+def print_result(players):
+        
+    dealer_value = players[len(players) - 1].value
+
+    for player in players:
+
+        if player.role != 'dealer':
+            print(f'{player.print_cards()}[{player.value}] - ', end = '')
+
+            if player.value > 21:
+                print('bust')
+            elif player.value > dealer_value or dealer_value > 21:
+                print('win')
+            elif player.value == dealer_value:
+                print('push')
+            else:
+                print('lose')

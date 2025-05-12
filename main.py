@@ -10,7 +10,7 @@ import player_utils
 
 
 # number of players (not including dealer)
-player_count = 4
+player_count = 7
 
 
 # create the deck
@@ -53,9 +53,6 @@ for player in players:
             print(f'dealer: {player.value}')
         else:
             print(f'dealer busted')
-        
-        # set the dealer value
-        dealer_value = player.value
 
     # regular decisions
     else:
@@ -69,11 +66,9 @@ for player in players:
             # prompt player
             choice = input('hit or stay? ')
 
-            # if the choice is stay, break the loop
+            # if the choice is stay, break the loop. If the choice is hit, hit and stay in the loop
             if choice == 'stay':
                 break
-                
-            # if the choice is hit, hit and stay in the loop
             elif choice == 'hit':
                 player_utils.hit(player, deck)
             
@@ -97,21 +92,9 @@ for player in players:
             else:
                 print('you busted everywhere :3')
         
-        # wait 1 second
         time.sleep(1)
 
-# go through everyone and say who won
-for player in players:
+time.sleep(1)
 
-    # don't print anything for the dealer
-    if player.role != 'dealer':
-        print(f'{player.print_cards()} [{player.value}] - ', end = '')
-
-        if player.value > 21:
-            print('bust')
-        elif player.value > dealer_value:
-            print('win')
-        elif player.value == dealer_value:
-            print('push')
-        else:
-            print('lose')
+# print results
+player_utils.print_result(players)
