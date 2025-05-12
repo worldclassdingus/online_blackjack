@@ -27,6 +27,10 @@ player_utils.print_all_cards(players)
 
 # main game loop
 
+
+# the dealer's value
+dealer_value = 0
+
 # loop through all players
 for player in players:
 
@@ -43,6 +47,15 @@ for player in players:
         while player.value < 17:
             time.sleep(1)
             player_utils.hit(player, deck)
+
+        # print what the dealer got
+        if player.value <= 21:
+            print(f'dealer: {player.value}')
+        else:
+            print(f'dealer busted')
+        
+        # set the dealer value
+        dealer_value = player.value
 
     # regular decisions
     else:
@@ -86,3 +99,19 @@ for player in players:
         
         # wait 1 second
         time.sleep(1)
+
+# go through everyone and say who won
+for player in players:
+
+    # don't print anything for the dealer
+    if player.role != 'dealer':
+        print(f'{player.print_cards()} [{player.value}] - ', end = '')
+
+        if player.value > 21:
+            print('bust')
+        elif player.value > dealer_value:
+            print('win')
+        elif player.value == dealer_value:
+            print('push')
+        else:
+            print('lose')
