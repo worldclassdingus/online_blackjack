@@ -63,7 +63,6 @@ for player in players:
         # keep making decisions until 21 or bust
         while player.value < 21:
 
-            # prompt player
             choice = input('hit or stay? ')
 
             # if the choice is stay, break the loop. If the choice is hit, hit and stay in the loop
@@ -71,6 +70,13 @@ for player in players:
                 break
             elif choice == 'hit':
                 player_utils.hit(player, deck)
+
+            # double down
+            # get one more card and break the loop
+            elif choice == 'double down':
+                player.doubled_down = True
+                player_utils.hit(player, deck)
+                break
             
             # print everyone's cards again
             elif choice == 'info':
