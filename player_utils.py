@@ -55,11 +55,12 @@ def print_all_cards(players):
 # function for hitting
 def hit(player, deck):
 
-    # print the card they draw (the top card of the deck) before it is removed from the deck
-    print(f'{deck.cards[len(deck.cards) - 1]}')
+    # draw the top card of the deck by itself to print it
+    card = deck.deal(1)
+    print(*card)
 
     # draw the card, update the value, and print the new cards and value
-    player.draw(deck.deal(1))
+    player.draw(card)
     player.update_value()
     print(f'{player.print_cards()}[{player.value}]')
 

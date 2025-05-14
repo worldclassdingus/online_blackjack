@@ -16,7 +16,7 @@ player_count = 7
 # create the deck
 deck = Deck()
 
-# create players, draw cards, and update values
+# create players, draw cards, and update values  
 players = player_utils.create_players(player_count)
 player_utils.draw_cards(players, deck)
 player_utils.update_all_values(players)
@@ -74,7 +74,6 @@ for player in players:
             # double down
             # get one more card and break the loop
             elif choice == 'double down':
-                player.doubled_down = True
                 player_utils.hit(player, deck)
                 break
             
@@ -89,14 +88,7 @@ for player in players:
         elif player.value == 21:
             print('blackjack!')
         else:
-            n = random.random()
-
-            if n > 0.01:
                 print('you busted :(')
-
-            # a lucky 1-in-100 surprise
-            else:
-                print('you busted everywhere :3')
         
         time.sleep(1)
 
