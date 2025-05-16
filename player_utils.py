@@ -1,5 +1,5 @@
 import random
-from player import Player
+from player import Gambler
 
 # utility functions file
 
@@ -11,16 +11,16 @@ def create_players(n):
 
     # create player_count - 1 ai players
     for i in range(n - 1):
-        players.append(Player('ai'))
+        players.append(Gambler('ai'))
 
     # create main player
-    players.append(Player('main'))
+    players.append(Gambler('main'))
 
     # randomize player order
     random.shuffle(players)
 
     # add dealer at the end of the list
-    players.append(Player('dealer'))
+    players.append(Gambler('dealer'))
 
     return players
 

@@ -1,7 +1,7 @@
 
-# player class
+# master gambler class
 # stores cards and a value
-class Player:
+class Gambler:
     def __init__(self, role):
         self.cards = []
         self.value = 0
@@ -37,4 +37,14 @@ class Player:
             card_list += f'{card} '
         
         return card_list
-        
+
+
+# real player class
+# stores a username and the address it is connected to
+# stores its socket
+class Player(Gambler):
+    def __init__(self, role, socket, address, username):
+        super().__init__(role)
+        self.socket = socket
+        self.address = address
+        self.username = username

@@ -2,11 +2,58 @@ import random
 import time
 
 from deck import Deck
+from player import Gambler
+from player import Player
 import player_utils
+import server_utils
 
 # main file that runs the game loop
 
-# comment to test git
+print("Welcome to the casino!\nType 'host' to host a server\nType 'connect' to connect to a server\nHit enter to play singleplayer")
+choice = input('')
+
+# hosting a server
+if choice == 'host':
+    host = input('enter your local ip address: ')
+    port = input('enter port number: ')
+    server = server_utils.create_server(host, port)
+
+    players = []
+    waiting = True
+
+    server.listen(7)
+
+
+    while len(players) <= 7:
+        print('waiting for players...')
+
+        player_socket, player_address = server.accept()
+        print(f'new connection: {player_address}')
+
+        player_username = player_socket.recv(1024).decode('utf-8')
+        players.append(Player('player', player_socket, player_address, player_username))
+        print(f'{player_username} joined')
+
+        print('players: ', end = '')
+        for player in players:
+            print(f'{player.username} ')
+        start = input(f'start game?')
+        if start == 'yes':
+            break
+    print('game started')
+
+# connect to a server
+elif choice == 'connect':
+    host = input('enter public ip address of the server (local ip if on LAN): ')
+    port = input('enter port number: ')
+
+    client = server_utils.create_client(host, port)
+
+    username = input('enter username: ')
+    client.send(username.encode('utf-8'))
+
+    print('waiting for game to start')
+
 
 
 # number of players (not including dealer)
