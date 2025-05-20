@@ -9,10 +9,12 @@ def create_server(host, port):
 
 	Args:
 		host (str): Local IP address to bind.
-		port (int): Port number to listen on.
+		Port (int): Port number to listen on.
 
 	Returns:
 		socket.socket: The bound server socket.
+		:param host:
+		:param port:
 	"""
 	try:
 		server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -29,10 +31,12 @@ def create_client(host, port):
 
 	Args:
 		host (str): IP address of the server.
-		port (int): Port number to connect to.
+		Port (int): Port number to connect to.
 
 	Returns:
 		socket.socket: The connected client socket.
+		:param host:
+		:param port:
 	"""
 	try:
 		client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
