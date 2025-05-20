@@ -13,6 +13,7 @@ print("Welcome to the casino!\nType 'host' to host a server\nType 'connect' to c
 choice = input('')
 
 # hosting a server
+# host end of the game
 if choice == 'host':
     host = input('enter your local ip address: ')
     port = input('enter port number: ')
@@ -23,26 +24,39 @@ if choice == 'host':
 
     server.listen(7)
 
-
+    # accept player connections and add them to the list of players
     while len(players) <= 7:
         print('waiting for players...')
 
         player_socket, player_address = server.accept()
         print(f'new connection: {player_address}')
 
+        # send the join message to all players
         player_username = player_socket.recv(1024).decode('utf-8')
-        players.append(Player('player', player_socket, player_address, player_username))
         print(f'{player_username} joined')
+        server_utils.send_all(f'{player_username} joined', players)
 
+        players.append(Player('player', player_socket, player_address, player_username))
+
+        # after each connection, ask the host if they want to start the game
         print('players: ', end = '')
         for player in players:
             print(f'{player.username} ')
-        start = input(f'start game?')
-        if start == 'yes':
+        start = input(f'start game? (y/n) ')
+        if start == 'y':
             break
+    
+    # start the game
     print('game started')
+    server_utils.send_all('game started', players)
+    
+    deck = Deck()
+    dealer = Gambler('dealer')
+
+    player_utils.draw_cards(players, deck)
 
 # connect to a server
+# player end of the game
 elif choice == 'connect':
     host = input('enter public ip address of the server (local ip if on LAN): ')
     port = input('enter port number: ')
@@ -52,7 +66,15 @@ elif choice == 'connect':
     username = input('enter username: ')
     client.send(username.encode('utf-8'))
 
+    # wait for game to start
     print('waiting for game to start')
+    while True:
+        message = client.recv(1024).decode('utf-8')
+        if message:
+            print(message)
+
+        if message == 'game started':
+            break
 
 
 

@@ -25,15 +25,10 @@ def create_players(n):
     return players
 
 # draw cards for everyone
-# takes the list of players (including the dealer) and the deck
 def draw_cards(players, deck):
     for player in players:
-
-        # if the player is the dealer, draw 1. Otherwise draw 2
-        if player.role == 'dealer':
-            player.draw(deck.deal(1))
-        else:
-            player.draw(deck.deal(2))
+        player.draw(deck.deal(2))
+        player.update_value()
 
 # update values for all players
 def update_all_values(players):
