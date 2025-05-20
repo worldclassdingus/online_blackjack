@@ -9,12 +9,17 @@ def create_server(host, port):
 
     return server
 
-# create client
-def create_client(host, port):
+# create client player (sends username as well)
+def create_client(host, port, username):
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect((host, int(port)))
+    client.send(username.encode('utf-8'))
 
     return client
+
+# send a message to one player
+def send(message, player):
+    player.socket.send(message.encode('utf-8'))
 
 # send a message to all players
 def send_all(message, players):

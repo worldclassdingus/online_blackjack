@@ -41,7 +41,7 @@ class Gambler:
 
 # real player class
 # stores a username and the address it is connected to
-# stores its socket
+# stores its communication socket(the one the server uses to talk to it)
 class Player(Gambler):
     def __init__(self, role, socket, address, username):
         super().__init__(role)
