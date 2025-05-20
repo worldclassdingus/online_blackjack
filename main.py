@@ -2,144 +2,121 @@ import random
 import time
 
 from deck import Deck
-from player import Gambler
-from player import Player
+from player import Gambler, Player
 import player_utils
 import server_utils
 
-# main file that runs the game loop
+# Main game loop
 
-print("Welcome to the casino!\nType 'host' to host a server\nType 'connect' to connect to a server\nHit enter to play singleplayer")
-choice = input('')
+print("Welcome to the casino!")
+print("Type 'host' to host a server")
+print("Type 'connect' to connect to a server")
+print("Hit enter to play singleplayer")
 
-# hosting a server
+choice = input('').strip().lower()
+
+# Multiplayer setup
+players = []
+
+# Hosting a server
 if choice == 'host':
-    host = input('enter your local ip address: ')
-    port = input('enter port number: ')
-    server = server_utils.create_server(host, port)
+	host = input('Enter your local IP address: ').strip()
+	port = int(input('Enter port number: ').strip())
+	server = server_utils.create_server(host, port)
 
-    players = []
-    waiting = True
+	server.listen(7)
+	print("Waiting for players to join...")
 
-    server.listen(7)
+	while len(players) < 7:
+		player_socket, player_address = server.accept()
+		print(f'New connection: {player_address}')
 
+		player_username = player_socket.recv(1024).decode('utf-8')
+		players.append(Player('player', player_socket, player_address, player_username))
+		print(f'{player_username} joined')
 
-    while len(players) <= 7:
-        print('waiting for players...')
+		print('Current players:', ', '.join(p.username for p in players))
 
-        player_socket, player_address = server.accept()
-        print(f'new connection: {player_address}')
+		start = input('Start game? (yes/no): ').strip().lower()
+		if start == 'yes':
+			break
 
-        player_username = player_socket.recv(1024).decode('utf-8')
-        players.append(Player('player', player_socket, player_address, player_username))
-        print(f'{player_username} joined')
+	print('Game started.')
 
-        print('players: ', end = '')
-        for player in players:
-            print(f'{player.username} ')
-        start = input(f'start game?')
-        if start == 'yes':
-            break
-    print('game started')
-
-# connect to a server
+# Connecting to a server
 elif choice == 'connect':
-    host = input('enter public ip address of the server (local ip if on LAN): ')
-    port = input('enter port number: ')
+	host = input('Enter the IP address of the server: ').strip()
+	port = int(input('Enter port number: ').strip())
 
-    client = server_utils.create_client(host, port)
+	client = server_utils.create_client(host, port)
 
-    username = input('enter username: ')
-    client.send(username.encode('utf-8'))
+	username = input('Enter username: ')
+	client.send(username.encode('utf-8'))
 
-    print('waiting for game to start')
+	print('Waiting for the host to start the game...')
+	# Here, you'd need to implement client sync logic
+	exit()  # Prevents singleplayer code from running under client mode
 
+# Singleplayer setup
+if choice == '':
+	player_count = 7  # Not including dealer
+	players = player_utils.create_players(player_count)
 
+	# Create and shuffle deck
+	deck = Deck()
 
-# number of players (not including dealer)
-player_count = 7
+	# Deal cards and update values
+	player_utils.draw_cards(players, deck)
+	player_utils.update_all_values(players)
 
+	# Print everyone's cards
+	player_utils.print_all_cards(players)
 
-# create the deck
-deck = Deck()
+	# --- Game Loop ---
+	for player in players:
 
-# create players, draw cards, and update values  
-players = player_utils.create_players(player_count)
-player_utils.draw_cards(players, deck)
-player_utils.update_all_values(players)
+		if player.role == 'dealer':
+			print("\n--- DEALER'S TURN ---")
+			player.draw(deck.deal(1))
+			player.update_value()
+			print(f'{player.print_cards()}[{player.value}]')
 
-# print everyone's cards
-player_utils.print_all_cards(players)
+			while player.value < 17:
+				time.sleep(1)
+				player_utils.hit(player, deck)
 
+			if player.value <= 21:
+				print(f'Dealer stands at {player.value}')
+			else:
+				print('Dealer busted.')
 
-# main game loop
+		else:
+			print("\n--- YOUR TURN ---")
+			print(f'{player.print_cards()}[{player.value}]')
 
+			while player.value < 21:
+				action = input('Choose: hit / stay / double down / info\n> ').strip().lower()
 
-# the dealer's value
-dealer_value = 0
+				if action == 'stay':
+					break
+				elif action == 'hit':
+					player_utils.hit(player, deck)
+				elif action == 'double down':
+					player_utils.hit(player, deck)
+					break
+				elif action == 'info':
+					player_utils.print_all_cards(players)
+				else:
+					print("Invalid input. Try again.")
 
-# loop through all players
-for player in players:
+			if player.value < 21:
+				print(f'You stood at {player.value}')
+			elif player.value == 21:
+				print('Blackjack!')
+			else:
+				print('You busted :(')
 
-    # dealer decisions
-    if player.role == 'dealer':
+			time.sleep(1)
 
-        # print message saying it's the dealer's turn
-        print("---DEALER'S TURN---")
-        player.draw(deck.deal(1))
-        player.update_value()
-        print(f'{player.print_cards()}[{player.value}]')
-
-        # continue hitting until 17
-        while player.value < 17:
-            time.sleep(1)
-            player_utils.hit(player, deck)
-
-        # print what the dealer got
-        if player.value <= 21:
-            print(f'dealer: {player.value}')
-        else:
-            print(f'dealer busted')
-
-    # regular decisions
-    else:
-        # print info
-        print('---YOUR TURN---')
-        print(f'{player.print_cards()}[{player.value}]')
-
-        # keep making decisions until 21 or bust
-        while player.value < 21:
-
-            choice = input('hit or stay? ')
-
-            # if the choice is stay, break the loop. If the choice is hit, hit and stay in the loop
-            if choice == 'stay':
-                break
-            elif choice == 'hit':
-                player_utils.hit(player, deck)
-
-            # double down
-            # get one more card and break the loop
-            elif choice == 'double down':
-                player_utils.hit(player, deck)
-                break
-            
-            # print everyone's cards again
-            elif choice == 'info':
-                player_utils.print_all_cards(players)
-        
-        # after the loop breaks, the player will either have stood, busted, or hit blackjack
-        # print a message saying which one
-        if player.value < 21:
-            print(f'you stood at {player.value}')
-        elif player.value == 21:
-            print('blackjack!')
-        else:
-                print('you busted :(')
-        
-        time.sleep(1)
-
-time.sleep(1)
-
-# print results
-player_utils.print_result(players)
+	time.sleep(1)
+	player_utils.print_result(players)

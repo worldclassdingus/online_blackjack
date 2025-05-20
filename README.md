@@ -34,17 +34,16 @@ online_blackjack/
 git clone https://github.com/worldclassdingus/online_blackjack.git
 cd online_blackjack
 ```
-2. Install Dependencies
-Make sure you have Python 3.x installed. Then install any required packages:
+### 2. Hosting the server
+```
+Change the ip in main.py to your ip and port
+```
 
+### 3. Run the Application
 ```
-pip install -r requirements.txt
-```
-⚠️ The requirements.txt file is not currently included. You may need to create it based on the actual dependencies used.
-
-3. Run the Application
-```
+python server_utils.py
 python main.py
+
 ```
 🧩 ToDo
 Server-side multiplayer support

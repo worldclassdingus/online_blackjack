@@ -1,50 +1,35 @@
-
-# master gambler class
-# stores cards and a value
+# Master gambler class
+# Stores cards and a total value
 class Gambler:
-    def __init__(self, role):
-        self.cards = []
-        self.value = 0
+	def __init__(self, role):
+		self.cards = []
+		self.value = 0
+		self.role = role  # 'main', 'dealer', or 'ai'
 
-        # role variable determines whether the player is the actual player, the dealer, or ai
-        self.role = role
-    
-    # draw cards
-    # takes a list of Cards (instances of the Card class) and adds it self.cards
-    def draw(self, cards):
-        self.cards += cards
-    
-    # updates self.value for new cards
-    def update_value(self):
-        self.value = 0
+	def draw(self, cards):
+		"""Adds a list of Card instances to this player's hand."""
+		self.cards += cards
 
-        for card in self.cards:
-            self.value += card.value
-        
-        # check for aces
-        # aces are 1 to start, but if the value is 11 or less it becomes 11
-        for card in self.cards:
+	def update_value(self):
+		"""Recalculates the total hand value, accounting for Aces."""
+		self.value = sum(card.value for card in self.cards)
 
-            if card.rank == 'A' and self.value <= 11:
-                self.value += 10
-    
-    # cleanly print cards
-    # returns a string
-    def print_cards(self):
-        card_list = ''
+		# Upgrade one or more Aces from 1 to 11 if it won't bust the hand
+		# Each Ace adds +10 more if total <= 11
+		for card in self.cards:
+			if card.rank == 'A' and self.value <= 11:
+				self.value += 10
 
-        for card in self.cards:
-            card_list += f'{card} '
-        
-        return card_list
+	def print_cards(self):
+		"""Returns a string representation of the player's hand."""
+		return ' '.join(str(card) for card in self.cards)
 
 
-# real player class
-# stores a username and the address it is connected to
-# stores its socket
+# Real player class for network play
+# Stores socket info and username
 class Player(Gambler):
-    def __init__(self, role, socket, address, username):
-        super().__init__(role)
-        self.socket = socket
-        self.address = address
-        self.username = username
+	def __init__(self, role, socket, address, username):
+		super().__init__(role)
+		self.socket = socket
+		self.address = address
+		self.username = username
