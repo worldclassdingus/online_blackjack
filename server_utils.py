@@ -6,6 +6,7 @@ import socket
 def create_server(host, port):
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((host, int(port)))
+    server.setblocking(0)
 
     return server
 

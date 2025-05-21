@@ -37,15 +37,18 @@ def update_all_values(players):
 
 # print everyone's cards and values
 def print_all_cards(players):
+    cards_to_print = ''
     for player in players:
 
         # different prints for dealer, player, and ai
         if player.role == 'dealer':
-            print(f'dealer: {player.print_cards()}??')
-        elif player.role == 'main':
-            print(f'you: {player.print_cards()}[{player.value}]')
+            cards_to_print += f'dealer: {player.print_cards()}??\n'
+        elif player.role == 'player':
+            cards_to_print += f'{player.username}: {player.print_cards()}[{player.value}]\n'
         else:
-            print(f'ai: {player.print_cards()}[{player.value}]')
+            cards_to_print += f'ai: {player.print_cards()}[{player.value}]\n'
+    
+    return cards_to_print
 
 # function for hitting
 def hit(player, deck):
@@ -54,7 +57,7 @@ def hit(player, deck):
     card = deck.deal(1)
     print(*card)
 
-    # draw the card, update the value, and print the new cards and value
+    # draw the card, update the value, and print the wanew cards and value
     player.draw(card)
     player.update_value()
     print(f'{player.print_cards()}[{player.value}]')

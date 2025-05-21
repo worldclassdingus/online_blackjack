@@ -1,5 +1,6 @@
 import threading
 import select
+import time
 
 import server_utils
 import player_utils
@@ -35,11 +36,25 @@ def host():
     # start the game
     print('game started')
     server_utils.send_all('game started', players)
+    time.sleep(2)
     
+    # actual game loop
     deck = Deck()
     dealer = Gambler('dealer')
 
+    # print everyone's cards
     player_utils.draw_cards(players, deck)
+    dealer.draw(deck.deal(1))
+    message = f'{player_utils.print_all_cards(players)}dealer: {dealer.print_cards()}??'
+    server_utils.send_all(message, players)
+    time.sleep(5)
+
+    # loop through everyone
+    for player in players:
+        server_utils.spec_send_all(f"{player.username}'s turn", '---YOUR TURN---\n', players, player)
+        server_utils.send_all(f'{player.print_cards()}[{player.value}]\n', players)
+
+
 
 
 # threading functions
@@ -70,6 +85,7 @@ def wait_for_players(server):
 
             players.append(Player('player', player_socket, player_address, player_username))
 
+        # stop waiting if 7 players join
         if len(players) >= 7:
             waiting = False
             print('maximum player count reached')

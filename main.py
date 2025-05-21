@@ -1,7 +1,9 @@
 import connector
 import host
 
-# main file that runs the game loop
+# main file that runs everything
+# multiplayer code is stored in host.py and connector.py
+# singleplayer code is in here
 
 print("Welcome to the casino!\nType 'host' to host a server\nType 'connect' to connect to a server\nHit enter to play singleplayer")
 choice = input('')
