@@ -62,14 +62,12 @@ def hit(player, deck):
 
 # print who won, lost, or busted at the end
 # takes the list of players (dealer needs to be at the end)
-def print_result(players):
-        
-    dealer_value = players[len(players) - 1].value
+def print_result(players, dealer_value):
 
     for player in players:
 
         if player.role != 'dealer':
-            print(f'{player.print_cards()}[{player.value}] - ', end = '')
+            print(f'{player.print_cards()} - ', end = '')
 
             if player.value > 21:
                 print('bust')

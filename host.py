@@ -73,7 +73,7 @@ def host():
             server_utils.send_all('blackjack!', players)
         elif player.value > 21:
             server_utils.spec_send_all(f'{player.username} busted :(',
-                                       'you busted :(',
+                                       f'you busted :(',
                                        players, player)
         else:
             server_utils.spec_send_all(f'{player.username} stood at {player.value}',
@@ -96,7 +96,23 @@ def host():
         server_utils.send_all(f'dealer: {dealer.value}', players)
     else:
         server_utils.send_all(f'dealer busted', players)
+    
+    # print results
+    for player in players:
+        result = f'{player.print_cards()} - '
 
+        if player.value > 21:
+            result += 'bust'
+        elif player.value > dealer.value or dealer.value > 21:
+            result += 'win'
+        elif player.value == dealer.value:
+            result += 'push'
+        else:
+            result += 'lose'
+        
+        server_utils.send_all(f'{player.username}: {result}\n', players)
+
+    server_utils.send_all('END')
 
 
 
