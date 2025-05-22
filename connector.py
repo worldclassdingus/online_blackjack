@@ -1,5 +1,4 @@
 import threading
-import select
 
 import server_utils
 
@@ -12,25 +11,29 @@ def connect():
     host = input('enter public ip address of the server (local ip if on LAN): ')
     port = input('enter port number: ')
 
+    global username
     username = input('enter username: ')
 
     global client
-    client = server_utils.create_client(host, port, username)
-
-    print('waiting for game to start')
+    client = server_utils.create_client(host, port)
 
     # print messages from server
-    receive_thread = threading.Thread(target = receive, daemon = True)
-    receive_thread.start()
-
-
-# threading functions
-
-# recieve messages from the server
-def receive():
     while True:
-        readable, _, _ = select.select([client], [], [], 1)
-        if readable:
+        try:
             message = client.recv(1024).decode('utf-8')
             if message:
-                print(message)
+                if message == 'USERNAME':
+                    client.send(username.encode('utf-8'))
+                elif message == 'TURN':
+                    while True:
+                        choice = input('')
+                        if choice in ('hit', 'stay'):
+                            client.send(choice.encode('utf-8'))
+                            break
+                else:
+                    print(message)
+        except:
+            print('an error occured')
+            break
+
+                

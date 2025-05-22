@@ -28,7 +28,6 @@ def create_players(n):
 def draw_cards(players, deck):
     for player in players:
         player.draw(deck.deal(2))
-        player.update_value()
 
 # update values for all players
 def update_all_values(players):
@@ -42,11 +41,11 @@ def print_all_cards(players):
 
         # different prints for dealer, player, and ai
         if player.role == 'dealer':
-            cards_to_print += f'dealer: {player.print_cards()}??\n'
+            cards_to_print += f'dealer: {player.print_cards()}\n'
         elif player.role == 'player':
-            cards_to_print += f'{player.username}: {player.print_cards()}[{player.value}]\n'
+            cards_to_print += f'{player.username}: {player.print_cards()}\n'
         else:
-            cards_to_print += f'ai: {player.print_cards()}[{player.value}]\n'
+            cards_to_print += f'ai: {player.print_cards()}\n'
     
     return cards_to_print
 
@@ -57,9 +56,8 @@ def hit(player, deck):
     card = deck.deal(1)
     print(*card)
 
-    # draw the card, update the value, and print the wanew cards and value
+    # draw the card, and print the new cards and value
     player.draw(card)
-    player.update_value()
     print(f'{player.print_cards()}[{player.value}]')
 
 # print who won, lost, or busted at the end

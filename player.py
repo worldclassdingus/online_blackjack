@@ -13,6 +13,7 @@ class Gambler:
     # takes a list of Cards (instances of the Card class) and adds it self.cards
     def draw(self, cards):
         self.cards += cards
+        self.update_value()
     
     # updates self.value for new cards
     def update_value(self):
@@ -35,8 +36,11 @@ class Gambler:
 
         for card in self.cards:
             card_list += f'{card} '
-        
-        return card_list
+
+        if self.role == 'dealer':
+            return f'{card_list}'
+        else:
+            return f'{card_list}[{self.value}]'
 
 
 # real player class
