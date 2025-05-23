@@ -9,11 +9,11 @@ from player import Gambler
 def create_players(n):
     players = []
 
-    # create player_count - 1 ai players
+    # create player_count - 1 AI players
     for i in range(n - 1):
         players.append(Gambler('ai'))
 
-    # create main player
+    # create the main player
     players.append(Gambler('main'))
 
     # randomize player order

@@ -1,7 +1,7 @@
 import connector
 import host
 
-# main file that runs everything
+# The main file that runs everything
 # multiplayer code is stored in host.py and connector.py
 # singleplayer code is in here
 
@@ -94,7 +94,7 @@ elif choice == 'connect':
         
 #         # after the loop breaks, the player will either have stood, busted, or hit blackjack
 #         # print a message saying which one
-#         if player.value < 21:
+#         If player.value < 21:
 #             print(f'you stood at {player.value}')
 #         elif player.value == 21:
 #             print('blackjack!')
