@@ -1,4 +1,3 @@
-
 # master gambler class
 # stores cards and a value
 class Gambler:
@@ -6,11 +5,11 @@ class Gambler:
         self.cards = []
         self.value = 0
 
-        # role variable determines whether the player is the actual player, the dealer, or ai
+        # role variable determines whether the player is the actual player, the dealer, or AI
         self.role = role
     
     # draw cards
-    # takes a list of Cards (instances of the Card class) and adds it self.cards
+    # takes a list of Cards (instances of the Card class) and adds itself.cards
     def draw(self, cards):
         self.cards += cards
         self.update_value()
@@ -23,7 +22,7 @@ class Gambler:
             self.value += card.value
         
         # check for aces
-        # aces are 1 to start, but if the value is 11 or less it becomes 11
+        #  are 1 to start, but if the value is 11 or less, it becomes 11
         for card in self.cards:
 
             if card.rank == 'A' and self.value <= 11:
@@ -45,7 +44,7 @@ class Gambler:
 
 # real player class
 # stores a username and the address it is connected to
-# stores its communication socket(the one the server uses to talk to it)
+# stores its communication socket (the one the server uses to talk to it)
 class Player(Gambler):
     def __init__(self, role, socket, address, username):
         super().__init__(role)
