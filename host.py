@@ -93,9 +93,9 @@ def host():
         time.sleep(1)
 
     if dealer.value <= 21:
-        server_utils.send_all(f'dealer: {dealer.value}', players)
+        server_utils.send_all(f'\ndealer: {dealer.value}', players)
     else:
-        server_utils.send_all(f'dealer busted', players)
+        server_utils.send_all(f'\ndealer busted', players)
     
     # print results
     for player in players:
@@ -112,7 +112,7 @@ def host():
         
         server_utils.send_all(f'{player.username}: {result}\n', players)
 
-    server_utils.send_all('END')
+    server_utils.send_all('END', players)
 
 
 
@@ -141,7 +141,7 @@ def accept_players():
             # send the new player the list of players
             player_list = ''
             for player in players:
-                player_list += f'{player.username} '
+                player_list += f'{player.username}, '
             player_socket.send(f'players: {player_list}'.encode('utf-8'))
         else:
             player_socket.send('game has already started'.encode('utf-8'))

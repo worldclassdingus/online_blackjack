@@ -25,7 +25,7 @@ def connect():
                 if message == 'USERNAME':
                     client.send(username.encode('utf-8'))
                 elif message == 'END':
-                    print('break')
+                    break
                 elif message == 'TURN':
                     while True:
                         choice = input('')
