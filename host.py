@@ -72,9 +72,14 @@ def host():
         if player.value == 21:
             server_utils.send_all('blackjack!', players)
         elif player.value > 21:
-            server_utils.spec_send_all(f'{player.username} busted :(',
-                                       f'you busted :(',
-                                       players, player)
+            if random.randint(1, 1000) == 1:
+                server_utils.spec_send_all(f'{player.username} busted :(',
+                                        f'you busted everywhere :3',
+                                        players, player)
+            else:
+                server_utils.spec_send_all(f'{player.username} busted :(',
+                                        f'you busted :(',
+                                        players, player)
         else:
             server_utils.spec_send_all(f'{player.username} stood at {player.value}',
                                        f'you stood at {player.value}',
@@ -112,7 +117,8 @@ def host():
         
         server_utils.send_all(f'{player.username}: {result}\n', players)
 
-    server_utils.send_all('END', players)
+    for player in players:
+        player.socket.send('END'.encode('utf-8'))
 
 
 
