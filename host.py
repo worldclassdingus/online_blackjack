@@ -73,7 +73,7 @@ def host():
             server_utils.send_all('blackjack!', players)
         elif player.value > 21:
             if random.randint(1, 1000) == 1:
-                server_utils.spec_send_all(f'{player.username} busted :(',
+                server_utils.spec_send_all(f'{player.username} busted everywhere :3',
                                         f'you busted everywhere :3',
                                         players, player)
             else:
